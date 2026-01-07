@@ -29,7 +29,7 @@ const groceriesSlice = createSlice({
         })
         .addCase(fetchGroceries.fulfilled,(state,action)=>{
             state.loading=true;
-            state.list = action.payload;
+            state.list = action.payload || [];
         })
         .addCase(fetchGroceries.rejected,(state,action)=>{
             state.loading=true;
@@ -40,18 +40,44 @@ const groceriesSlice = createSlice({
         })
         .addCase(changeStatus.fulfilled,(state,action)=>{
             state.loading=true;
-            const id = action.payload;
+            const {id,status} = action.payload;
             const existingItemIndex = state.list.findIndex(ele=>ele.id===id);
             const existingItem = state.list[existingItemIndex];
             let updatedItem;
             if(existingItem){
-                updatedItem = {...existingItem,status:"bought"}
+                updatedItem = {...existingItem,completed:status}
             }
             state.list[existingItemIndex] = updatedItem;
         })
         .addCase(changeStatus.rejected,(state,action)=>{
             state.loading=true;
             state.error = action.payload;
+        })
+        .addCase(deleteGroceries.pending,(state)=>{
+            state.loading=true;
+        })
+        .addCase(deleteGroceries.rejected,(state,action)=>{
+            state.loading=false;
+            state.error = action.payload;
+        })
+        .addCase(deleteGroceries.fulfilled,(state,action)=>{
+            state.loading=false;
+            state.list = state.list.filter(ele=>ele.id!==action.payload);
+        })
+        .addCase(editGroceries.pending,(state)=>{
+            state.loading=true;
+        })
+        .addCase(editGroceries.rejected,(state,action)=>{
+            state.loading=false;
+            state.error = action.payload;
+        })
+        .addCase(editGroceries.fulfilled,(state,action)=>{
+            state.loading=false;
+            const {data,id} = action.payload;
+            const existingIndex = state.list.findIndex(ele=>ele.id===id);
+            if(existingIndex !== -1){
+                state.list[existingIndex] = {...data,id}
+            }
         })
     }
 })
@@ -92,14 +118,39 @@ export const fetchGroceries = createAsyncThunk(
 )
 
 export const changeStatus =createAsyncThunk(
-    "groceries/changeStatus",async(id,thunkAPI)=>{
+    "groceries/changeStatus",async({id,status},thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
             const safeEmail = email.replace(/[.]/g,"_");
-            const res= await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}//groceries/${id}.json`,{status:"bought"})            
-            return id
+            const res= await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}//groceries/${id}.json`,{completed:status})            
+            return {id,status}
         }catch(err){
             thunkAPI.rejectWithValue("Failed to change the status");
+        }
+    }
+)
+export const deleteGroceries = createAsyncThunk(
+    "recipe/deleteGroceries",async(id,thunkAPI)=>{
+        try{
+            const email = thunkAPI.getState().auth.email;
+            const safeEmail = email.replace(/[.]/g,"_");
+            await axios.delete(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/groceries/${id}.json`)            
+            return id;
+        }catch(err){
+            thunkAPI.rejectWithValue("Failed to delete grocery");
+
+        }
+    }
+)
+export const editGroceries = createAsyncThunk(
+    "recipe/editGroceries",async({data,id},thunkAPI)=>{
+        try{
+            const email = thunkAPI.getState().auth.email;
+            const safeEmail = email.replace(/[.]/g,"_");            
+            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/groceries/${id}.json`,data)            
+            return {data,id}
+        }catch(err){
+            thunkAPI.rejectWithValue("Failed to edit the recipe");
         }
     }
 )

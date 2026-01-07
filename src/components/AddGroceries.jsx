@@ -1,23 +1,38 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MyModal from './UI/MyModal'
 import { Button, Form } from 'react-bootstrap'
 import { useDispatch } from 'react-redux';
-import { addGroceries } from '../store/slices/groceriesSlice';
+import { addGroceries, editGroceries } from '../store/slices/groceriesSlice';
 
-function AddGroceries({show,onClose,isEdit}) {
+function AddGroceries({show,onClose,isEdit,setIsEdit}) {
     const [name,setName] =useState("");
     const [note,setNote] = useState("");
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+        if(isEdit){
+            setName(isEdit.name||"");
+            setNote(isEdit.note||"");
+        }else{
+            resetForm()
+        }
+    },[isEdit]);
 
     const formSubmitHandler=(e)=>{
         e.preventDefault();
         const data = {
             name,
-            status:"pending",
+            completed:false,
             note:note?note:"Add a note"
         }
-        dispatch(addGroceries(data));
+        if(isEdit){
+            dispatch(editGroceries({data,id:isEdit.id}));
+        }else{
+            dispatch(addGroceries(data));
+        
+        }
         resetForm();
+        setIsEdit(null);
     }
     const resetForm= ()=>{
         setName("");

@@ -1,0 +1,9 @@
+.green-checkbox .form-check-input:checked {
+    background-color: #198754;  
+    border-color: #198754;
+  }
+  
+  .green-checkbox .form-check-input:focus {
+    box-shadow: none;
+  }
+  
