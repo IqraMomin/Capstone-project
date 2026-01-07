@@ -1,0 +1,19 @@
+.navbar .menu-items{
+    background-color: #9b722649;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 10rem;
+    height: 3rem;
+    padding: 1rem 0.3rem;
+    border-radius: 10px;
+    font:inherit;
+    font-weight: bold;
+}
+.navbar .menu-items:hover{
+    background-color: #705016;
+    color: antiquewhite !important;
+    font-size: larger;
+}
