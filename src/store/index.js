@@ -3,13 +3,15 @@ import authReducer from "./slices/authSlice";
 import recipeReducer from "./slices/recipeSlice";
 import profileReducer from "./slices/profileSlice";
 import groceriesReducer from "./slices/groceriesSlice";
+import choresReducer from "./slices/choresSlice";
 
 const store = configureStore({
     reducer:{
         auth:authReducer,
         recipe:recipeReducer,
         profile:profileReducer,
-        groceries:groceriesReducer
+        groceries:groceriesReducer,
+        chores:choresReducer
     }
 })
 

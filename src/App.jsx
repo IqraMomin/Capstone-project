@@ -6,6 +6,7 @@ import img1 from "./assets/CPBG2.jpg"
 import { useDispatch} from 'react-redux'
 import { fetchRecipes } from './store/slices/recipeSlice'
 import { fetchGroceries } from './store/slices/groceriesSlice'
+import { fetchChores } from './store/slices/choresSlice'
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
   useEffect(()=>{
     dispatch(fetchRecipes());
     dispatch(fetchGroceries());
+    dispatch(fetchChores());
   },[])
 
   return (

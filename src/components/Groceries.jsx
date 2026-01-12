@@ -30,7 +30,7 @@ function Groceries() {
         setShow(true);
     }
     return (
-        <div className='w-100 h-100 pt-3'>
+        <div className='w-100 h-100 pt-3 m-2 p-3 overflow-y-auto' >
             <div className='d-flex justify-content-center align-items-center gap-5'>
                 <div><h3>Groceries To BUY!!!</h3></div>
                 <Button variant='outline-secondary' onClick={showModalHandler}>Add Groceries</Button>

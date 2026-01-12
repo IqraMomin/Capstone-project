@@ -1,0 +1,11 @@
+table td {
+    vertical-align: top;
+  }
+  .note-col {
+    width: 250px;        /* fixed width */
+    max-width: 250px;
+    vertical-align: top;
+    word-wrap: break-word;
+    white-space: normal;
+    /* background-color: #8c898963; */
+  }

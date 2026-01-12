@@ -10,6 +10,7 @@ import { authActions } from '../store/slices/authSlice'
 import { useDispatch } from 'react-redux';
 import UserProfile from './UserProfile';
 import Groceries from './Groceries';
+import Chores from './Chores';
 
 
 function Mainpage() {
@@ -28,7 +29,7 @@ function Mainpage() {
 
          
   return (
-    <div className="h-100 w-100 d-flex flex-column">
+    <div className="h-100 w-100 d-flex flex-column overflow-y-auto">
       {/* Header */}
       {isLoggedIn &&  <div className='d-flex align-items-center'>
         <Header />
@@ -59,6 +60,9 @@ function Mainpage() {
           </Route>
           <Route path="/groceries" exact>
             {isLoggedIn ? <Groceries /> : <Redirect to="/auth" />}
+          </Route>
+          <Route path="/chores" exact>
+            {isLoggedIn ? <Chores /> : <Redirect to="/auth" />}
           </Route>
 
           <Route path="/reset">
