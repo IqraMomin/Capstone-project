@@ -4,6 +4,7 @@ import recipeReducer from "./slices/recipeSlice";
 import profileReducer from "./slices/profileSlice";
 import groceriesReducer from "./slices/groceriesSlice";
 import choresReducer from "./slices/choresSlice";
+import walletReducer from "./slices/walletSlice";
 
 const store = configureStore({
     reducer:{
@@ -11,7 +12,8 @@ const store = configureStore({
         recipe:recipeReducer,
         profile:profileReducer,
         groceries:groceriesReducer,
-        chores:choresReducer
+        chores:choresReducer,
+        wallet:walletReducer
     }
 })
 

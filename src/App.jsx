@@ -7,6 +7,7 @@ import { useDispatch} from 'react-redux'
 import { fetchRecipes } from './store/slices/recipeSlice'
 import { fetchGroceries } from './store/slices/groceriesSlice'
 import { fetchChores } from './store/slices/choresSlice'
+import { fetchWallet } from './store/slices/walletSlice'
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
     dispatch(fetchRecipes());
     dispatch(fetchGroceries());
     dispatch(fetchChores());
+    dispatch(fetchWallet());
   },[])
 
   return (

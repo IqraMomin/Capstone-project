@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import UserProfile from './UserProfile';
 import Groceries from './Groceries';
 import Chores from './Chores';
+import Wallet from './Wallet';
 
 
 function Mainpage() {
@@ -63,6 +64,9 @@ function Mainpage() {
           </Route>
           <Route path="/chores" exact>
             {isLoggedIn ? <Chores /> : <Redirect to="/auth" />}
+          </Route>
+          <Route path="/wallet" exact>
+            {isLoggedIn ? <Wallet/> : <Redirect to="/auth" />}
           </Route>
 
           <Route path="/reset">

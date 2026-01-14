@@ -122,7 +122,7 @@ export const changeStatus =createAsyncThunk(
         try{
             const email = thunkAPI.getState().auth.email;
             const safeEmail = email.replace(/[.]/g,"_");
-            const res= await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}//groceries/${id}.json`,{completed:status})            
+            const res= await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/groceries/${id}.json`,{completed:status})            
             return {id,status}
         }catch(err){
             thunkAPI.rejectWithValue("Failed to change the status");

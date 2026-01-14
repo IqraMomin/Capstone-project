@@ -1,37 +1,38 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-    error: null,
-    loading: null,
-    list: []
+    loading:null,
+    error:null,
+    list:[]
 }
 
-const choresSlice = createSlice({
-    name: "chores",
+const walletSlice = createSlice({
+    name:"wallet",
     initialState,
-    reducers: {},
+    reducers:{},
     extraReducers:(builder)=>{
         builder
-        .addCase(addChores.pending,(state)=>{
+        .addCase(addToWallet.pending,(state)=>{
             state.loading=true;
         })
-        .addCase(addChores.fulfilled,(state,action)=>{
+        .addCase(addToWallet.fulfilled,(state,action)=>{
             state.loading=true;
             state.list.push(action.payload);
         })
-        .addCase(addChores.rejected,(state,action)=>{
+        .addCase(addToWallet.rejected,(state,action)=>{
             state.loading=true;
             state.error = action.payload;
         })
-        .addCase(fetchChores.pending,(state)=>{
+        .addCase(fetchWallet.pending,(state)=>{
             state.loading=true;
         })
-        .addCase(fetchChores.fulfilled,(state,action)=>{
+        .addCase(fetchWallet.fulfilled,(state,action)=>{
             state.loading=false;
             state.list = action.payload || [];
         })
-        .addCase(fetchChores.rejected,(state,action)=>{
+        .addCase(fetchWallet.rejected,(state,action)=>{
             state.loading=true;
             state.error = action.payload;
         })
@@ -53,25 +54,25 @@ const choresSlice = createSlice({
             state.loading=false;
             state.error = action.payload;
         })
-        .addCase(deleteChores.pending,(state)=>{
+        .addCase(deleteFromWallet.pending,(state)=>{
             state.loading=true;
         })
-        .addCase(deleteChores.rejected,(state,action)=>{
+        .addCase(deleteFromWallet.rejected,(state,action)=>{
             state.loading=false;
             state.error = action.payload;
         })
-        .addCase(deleteChores.fulfilled,(state,action)=>{
+        .addCase(deleteFromWallet.fulfilled,(state,action)=>{
             state.loading=false;
             state.list = state.list.filter(ele=>ele.id!==action.payload);
         })
-        .addCase(editChores.pending,(state)=>{
+        .addCase(editWallet.pending,(state)=>{
             state.loading=true;
         })
-        .addCase(editChores.rejected,(state,action)=>{
+        .addCase(editWallet.rejected,(state,action)=>{
             state.loading=false;
             state.error = action.payload;
         })
-        .addCase(editChores.fulfilled,(state,action)=>{
+        .addCase(editWallet.fulfilled,(state,action)=>{
             state.loading=false;
             const {data,id} = action.payload;
             const existingIndex = state.list.findIndex(ele=>ele.id===id);
@@ -81,77 +82,77 @@ const choresSlice = createSlice({
         })
     }
 })
-export const choresActions = choresSlice.actions;
-export default choresSlice.reducer
 
+export const walletActions = walletSlice.actions;
+export default walletSlice.reducer;
 
-export const addChores = createAsyncThunk(
-    "chores/addChores", async (data, thunkAPI) => {
+export const addToWallet = createAsyncThunk(
+    "wallet/addToWallet", async (data, thunkAPI) => {
         try {
             const email = thunkAPI.getState().auth.email;
             const safeEmail = email.replace(/[.]/g,"_");
-            const res= await axios.post(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores.json`,data)            
+            const res= await axios.post(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/wallet.json`,data)            
             console.log({...data,id:res.data.name});
             return {...data,id:res.data.name}
 
         } catch (err) {
-            thunkAPI.rejectWithValue("Failed to add Chores");
+            thunkAPI.rejectWithValue("Failed to add to wallet");
         }
     }
 )
 
-export const fetchChores = createAsyncThunk(
-    "chores/fetchChores",async(_,thunkAPI)=>{
+export const fetchWallet = createAsyncThunk(
+    "wallet/fetchWallet",async(_,thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
             const safeEmail = email.replace(/[.]/g,"_");
-            const res= await axios.get(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores.json`)            
+            const res= await axios.get(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/wallet.json`)            
             const list = Object.keys(res.data).map(ele=>{
                 return {...res.data[ele],id:ele}
             })
             return list;
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to fetch Chores");
+            thunkAPI.rejectWithValue("Failed to fetch Wallet");
         }
 
     }
 )
 
 export const changeStatus =createAsyncThunk(
-    "chores/changeStatus",async(id,thunkAPI)=>{
+    "wallet/changeStatus",async(id,thunkAPI)=>{
         try{
             const date=new Date().toISOString().split("T")[0];
             const email = thunkAPI.getState().auth.email;
             const safeEmail = email.replace(/[.]/g,"_");
-            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores/${id}.json`,{completed:date})            
+            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/wallet/${id}.json`,{completed:date})            
             return {id,date}
         }catch(err){
             thunkAPI.rejectWithValue("Failed to change the status");
         }
     }
 )
-export const deleteChores = createAsyncThunk(
-    "chores/deleteChores",async(id,thunkAPI)=>{
+export const deleteFromWallet = createAsyncThunk(
+    "wallet/deleteFromWallet",async(id,thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
             const safeEmail = email.replace(/[.]/g,"_");
-            await axios.delete(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores/${id}.json`)            
+            await axios.delete(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/wallet/${id}.json`)            
             return id;
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to delete chores");
+            thunkAPI.rejectWithValue("Failed to delete from wallet");
 
         }
     }
 )
-export const editChores = createAsyncThunk(
-    "chores/editChores",async({data,id},thunkAPI)=>{
+export const editWallet = createAsyncThunk(
+    "wallet/editWallet",async({data,id},thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
             const safeEmail = email.replace(/[.]/g,"_");            
-            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores/${id}.json`,data)            
+            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/wallet/${id}.json`,data)            
             return {data,id}
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to edit the chore");
+            thunkAPI.rejectWithValue("Failed to edit the wallet");
         }
     }
 )

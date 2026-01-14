@@ -14,10 +14,6 @@ function Chores() {
     const [isEdit, setIsEdit] = useState(null);
     const dispatch = useDispatch();
 
-    useEffect(()=>{
-        console.log(chores);
-    },[chores])
-
     const showModalHandler = () => {
         setShow(true);
     }
