@@ -1,16 +1,63 @@
-# React + Vite
+# 🧾 Capstone Project – Personal Organizer App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based personal organizer application that helps stay at home users to manage **Recipes, Groceries, Chores, and Wallet transactions** in one place.  
+The application uses **Redux Toolkit** for state management and **React-Bootstrap** for a clean, responsive UI.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## React Compiler
+### 🍲 Recipe Book
+- Add and view personal recipes
+- Maintain a recipe collection
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🛒 Groceries
+- Add grocery items
+- Mark items as bought
+- View pending and completed groceries
 
-## Expanding the ESLint configuration
+### 🧹 Chores
+- Add daily chores
+- Mark chores as completed
+- View pending tasks and task history
+- Edit or delete chores
+- Track completion date
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 💰 Wallet
+- Track who owes you money
+- Track whom you owe money to
+- Separate incoming and outgoing balances
+- Display amounts using Indian Rupee (₹)
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React
+- **Build Tool:** Vite
+- **State Management:** Redux Toolkit
+- **Routing:** React Router DOM (v5)
+- **UI Library:** React-Bootstrap
+- **Icons:** Bootstrap Icons
+- **Styling:** CSS & Bootstrap utilities
+
+---
+## 🚀 Getting Started (Run Locally)
+
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/IqraMomin/Capstone-project.git
+
+
+2️⃣ Navigate to the project directory
+cd Capstone-project
+
+3️⃣ Install dependencies
+npm install
+
+4️⃣ Start the development server
+npm run dev
+
+The application will run at:
+http://localhost:5173
+
