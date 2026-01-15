@@ -3,7 +3,7 @@ import { Button, OverlayTrigger, Table, Tooltip } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
 import "./Groceries.css"
 import AddChores from './AddChores';
-import {changeStatus,deleteChores } from '../store/slices/choresSlice';
+import {changeStatus,deleteChores, markReminded } from '../store/slices/choresSlice';
 import "./Chores.css"
 
 function Chores() {
@@ -13,6 +13,21 @@ function Chores() {
     const [show, setShow] = useState(false);
     const [isEdit, setIsEdit] = useState(null);
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+        const interval = setInterval(()=>{
+            const now = new Date();
+            choresToComplete.forEach(task=>{
+                if(task.reminderAt && !task.reminded &&
+                    new Date(task.reminderAt) <= now){
+                        alert(`⏰ Reminder: ${task.name}`);
+                        dispatch(markReminded(task.id));
+                }
+            })
+            
+        },60000);
+        return ()=>clearInterval(interval);
+    },[choresToComplete])
 
     const showModalHandler = () => {
         setShow(true);

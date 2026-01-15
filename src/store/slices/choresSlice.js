@@ -40,12 +40,12 @@ const choresSlice = createSlice({
         })
         .addCase(changeStatus.fulfilled,(state,action)=>{
             state.loading=false;
-            const {id,date} = action.payload;
+            const {id,date,reminded} = action.payload;
             const existingItemIndex = state.list.findIndex(ele=>ele.id===id);
             const existingItem = state.list[existingItemIndex];
             let updatedItem;
             if(existingItem){
-                updatedItem = {...existingItem,completed:date}
+                updatedItem = {...existingItem,completed:date,reminded:true}
             }
             state.list[existingItemIndex] = updatedItem;
         })
@@ -79,6 +79,12 @@ const choresSlice = createSlice({
                 state.list[existingIndex] = {...data,id}
             }
         })
+        .addCase(markReminded.fulfilled, (state, action) => {
+            const task = state.list.find(ele => ele.id === action.payload);
+            if (task) {
+              task.reminded = true;
+            }
+          })
     }
 })
 export const choresActions = choresSlice.actions;
@@ -123,8 +129,8 @@ export const changeStatus =createAsyncThunk(
             const date=new Date().toISOString().split("T")[0];
             const email = thunkAPI.getState().auth.email;
             const safeEmail = email.replace(/[.]/g,"_");
-            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores/${id}.json`,{completed:date})            
-            return {id,date}
+            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores/${id}.json`,{completed:date,reminded:true})            
+            return {id,date,reminded:true}
         }catch(err){
             thunkAPI.rejectWithValue("Failed to change the status");
         }
@@ -155,3 +161,16 @@ export const editChores = createAsyncThunk(
         }
     }
 )
+export const markReminded = createAsyncThunk(
+    "chores/markReminded",
+    async (taskId,thunkAPI) => {
+        const email = thunkAPI.getState().auth.email;
+        const safeEmail = email.replace(/[.]/g,"_");            
+        await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores/${taskId}.json`,{
+          reminded: true
+        }
+      );
+  
+      return taskId;
+    }
+  );
