@@ -23,6 +23,15 @@ The application uses **Redux Toolkit** for state management and **React-Bootstra
 - Edit or delete chores
 - Track completion date
 
+  
+### ⏰ Task Reminders
+- Set a reminder date and time for a chore using a `datetime-local` input
+- Reminders trigger automatically when the scheduled time is reached
+- Reminder alerts are shown while the app is running
+- Each reminder is triggered **only once**
+- Reminder status is synced with **Firebase** to prevent duplicate alerts
+- Updating the reminder time resets the reminder status
+
 ### 💰 Wallet
 - Track who owes you money
 - Track whom you owe money to
