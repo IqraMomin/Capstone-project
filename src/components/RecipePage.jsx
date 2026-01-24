@@ -1,7 +1,9 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
+import { useSelector } from 'react-redux';
 
 function RecipePage({activeRecipe}) {
+ 
     if (!activeRecipe) {
         return <p>Please select a recipe</p>;
       }

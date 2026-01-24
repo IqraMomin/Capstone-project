@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { getUserPath } from "../../utils/firebaseUrl";
 
 const initialState = {
-    loading:null,
+    loading:false,
     error:null,
     list:[]
 }
@@ -90,13 +91,12 @@ export const addToWallet = createAsyncThunk(
     "wallet/addToWallet", async (data, thunkAPI) => {
         try {
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");
-            const res= await axios.post(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/wallet.json`,data)            
+            const res= await axios.post(`${getUserPath(email)}/wallet.json`,data)            
             console.log({...data,id:res.data.name});
             return {...data,id:res.data.name}
 
         } catch (err) {
-            thunkAPI.rejectWithValue("Failed to add to wallet");
+            return thunkAPI.rejectWithValue("Failed to add to wallet");
         }
     }
 )
@@ -105,14 +105,13 @@ export const fetchWallet = createAsyncThunk(
     "wallet/fetchWallet",async(_,thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");
-            const res= await axios.get(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/wallet.json`)            
+            const res= await axios.get(`${getUserPath(email)}/wallet.json`)            
             const list = Object.keys(res.data).map(ele=>{
                 return {...res.data[ele],id:ele}
             })
             return list;
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to fetch Wallet");
+            return thunkAPI.rejectWithValue("Failed to fetch Wallet");
         }
 
     }
@@ -123,8 +122,7 @@ export const changeStatus =createAsyncThunk(
         try{
             const date=new Date().toISOString().split("T")[0];
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");
-            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/wallet/${id}.json`,{completed:date})            
+             await axios.patch(`${getUserPath(email)}/wallet/${id}.json`,{completed:date})            
             return {id,date}
         }catch(err){
             thunkAPI.rejectWithValue("Failed to change the status");
@@ -135,11 +133,10 @@ export const deleteFromWallet = createAsyncThunk(
     "wallet/deleteFromWallet",async(id,thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");
-            await axios.delete(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/wallet/${id}.json`)            
+            await axios.delete(`${getUserPath(email)}/wallet/${id}.json`)            
             return id;
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to delete from wallet");
+            return thunkAPI.rejectWithValue("Failed to delete from wallet");
 
         }
     }
@@ -148,11 +145,10 @@ export const editWallet = createAsyncThunk(
     "wallet/editWallet",async({data,id},thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");            
-            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/wallet/${id}.json`,data)            
+            await axios.patch(`${getUserPath(email)}/wallet/${id}.json`,data)            
             return {data,id}
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to edit the wallet");
+            return thunkAPI.rejectWithValue("Failed to edit the wallet");
         }
     }
 )

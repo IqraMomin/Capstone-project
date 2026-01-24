@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import AuthForm from './Auth/AuthForm'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom/cjs/react-router-dom';
@@ -18,6 +18,8 @@ function Mainpage() {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const [showProfile,setShowProfile] = useState(false);
+
+  
 
   const logoutHandler = () => {
     dispatch(authActions.logout());

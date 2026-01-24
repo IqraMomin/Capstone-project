@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux';
 
 function RecipeBook() {
     const recipeList = useSelector(state => state.recipe.list ||[]);
+    const loading = useSelector(state=>state.recipe.loading);
+
     const [showModal, setShowModal] = useState(false);
     const [activeRecipeId, setActiveRecipeId] = useState(null);
     const [isEdit,setIsEdit] = useState(null);
@@ -30,12 +32,13 @@ function RecipeBook() {
     }
     const recipeListSafe = recipeList || []
     const activeRecipe = recipeListSafe.find(recipe=>recipe.id===activeRecipeId);
-
+ 
     
     return (
         <Row className='h-100 w-100 g-0'>
             <Col xs={9}>
-                <RecipePage activeRecipe={activeRecipe} />
+                {loading ? <p>Loading...</p> : <RecipePage activeRecipe={activeRecipe} />
+            }
             </Col>
             <Col xs={3}>
                 <div className='h-100 d-flex flex-column'>
@@ -48,7 +51,7 @@ function RecipeBook() {
                         onClose={closeModalHandler} />}
 
                     </div>
-                    <div className="flex-grow-1 overflow-auto">
+                    <div className="flex-grow-1 overflow-y-auto">
                         <RecipeItem 
                         showModal={setShowModal}
                         isEdit={setIsEdit}

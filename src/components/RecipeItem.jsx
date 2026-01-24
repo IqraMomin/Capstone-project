@@ -11,6 +11,8 @@ function RecipeItem({
     showModal }) {
     const dispatch = useDispatch();
     const recipeList = useSelector(state => state.recipe.list || []);
+    const loading = useSelector(state=>state.recipe.loading);
+
     const deleteRecipeHandler = (id) => {
         dispatch(deleteRecipe(id));
         if (activeRecipeId === id) {
@@ -25,8 +27,8 @@ function RecipeItem({
         showModal(true);
     }
     return (
-        <div className='h-100 w-100'>
-            {recipeList.map(ele => {
+        <div className='m-0 p-0 w-100'>
+            {loading ? <p>Loading...</p> :recipeList.map(ele => {
                 return <Card key={ele.id} className='sm m-2 p-0 pt-4' style={{ backgroundColor: "#44310e30" }}>
                     <CardTitle>{ele.name}</CardTitle>
                     <CardBody className='d-flex flex-column'>
@@ -44,6 +46,7 @@ function RecipeItem({
                     </CardBody>
                 </Card>
             })}
+            
         </div>
     )
 }

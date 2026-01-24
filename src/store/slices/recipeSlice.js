@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { getUserPath } from "../../utils/firebaseUrl";
 
 const initialState = {
     error:null,
-    loading:null,
+    loading:false,
     list:[]
 }
 
@@ -71,10 +72,10 @@ export const addRecipe = createAsyncThunk(
         try{
             const email = thunkAPI.getState().auth.email;
             const safeEmail = email.replace(/[.]/g,"_");
-            const res= await axios.post(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/recipes.json`,data)            
+            const res= await axios.post(`${getUserPath(email)}/recipes.json`,data)            
             return {...data,id:res.data.name}
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to add recipe");
+           return thunkAPI.rejectWithValue("Failed to add recipe");
         }
     }
 )
@@ -83,11 +84,10 @@ export const deleteRecipe = createAsyncThunk(
     "recipe/deleteRecipe",async(id,thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");
-            await axios.delete(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/recipes/${id}.json`)            
+            await axios.delete(`${getUserPath(email)}/recipes/${id}.json`)            
             return id;
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to delete recipe");
+            return thunkAPI.rejectWithValue("Failed to delete recipe");
 
         }
     }
@@ -96,14 +96,15 @@ export const fetchRecipes = createAsyncThunk(
     "recipe/fetchRecipes",async(_,thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");
-            const res= await axios.get(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/recipes.json`)            
+            const res= await axios.get(`${getUserPath(email)}/recipes.json`)            
+            console.log("Inside the fetch",res);
             const list = Object.keys(res.data).map(ele=>{
                 return {...res.data[ele],id:ele}
             })
+            
             return list;
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to fetch recipes");
+            return thunkAPI.rejectWithValue("Failed to fetch recipes");
         }
     }
 )
@@ -112,11 +113,10 @@ export const editRecipe = createAsyncThunk(
     "recipe/editRecipe",async({data,id},thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");            
-            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/recipes/${id}.json`,data)            
+            await axios.patch(`${getUserPath(email)}/recipes/${id}.json`,data)            
             return {data,id}
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to edit the recipe");
+            return thunkAPI.rejectWithValue("Failed to edit the recipe");
         }
     }
 )

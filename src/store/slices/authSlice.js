@@ -1,15 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const initialToken = localStorage.getItem("token")|| "";
-const initialEmail = localStorage.getItem("email")||"";
+const initialToken = localStorage.getItem("token");
+const initialEmail = localStorage.getItem("email");
 
 const initialState= {
     error:null,
-    loading:null,
+    loading:false,
     token:initialToken,
     email:initialEmail,
-    isLoggedIn:!!initialToken,
+    isLoggedIn: !!initialToken && !!initialEmail
+    
 }
 
 const authSlice = createSlice({
@@ -47,7 +48,7 @@ const authSlice = createSlice({
 export const login = createAsyncThunk(
     "auth/login",async(userData,thunkAPI)=>{
     try{
-        const res = await axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA_bCm1pyfyYgOHr4XR6Xe2yaIxP1vKnOY",userData);           
+        const res = await axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDClhpQ-7v_HizsMvikHvKav7Fs_cAdn9o",userData);           
         const idToken = res.data.idToken;
         const email = userData.email;
         localStorage.setItem("token",idToken);
@@ -68,7 +69,7 @@ export const signup = createAsyncThunk(
     async ({ userData, handleLogin }, thunkAPI) => {
       try {
         // Create auth user
-        await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA_bCm1pyfyYgOHr4XR6Xe2yaIxP1vKnOY`,userData)
+        await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDClhpQ-7v_HizsMvikHvKav7Fs_cAdn9o`,userData)
             
   
         const safeEmail = userData.email.replace(/[.]/g, "_");
@@ -96,7 +97,7 @@ export const signup = createAsyncThunk(
     "auth/resetPassword",async(email,thunkAPI)=>{
         try {
             const response = await fetch(
-              "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyA_bCm1pyfyYgOHr4XR6Xe2yaIxP1vKnOY",
+              "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDClhpQ-7v_HizsMvikHvKav7Fs_cAdn9o",
               {
                 method: "POST",
                 body: JSON.stringify({

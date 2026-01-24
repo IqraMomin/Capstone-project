@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { getUserPath } from "../../utils/firebaseUrl";
 
 const initialState = {
     error: null,
-    loading: null,
+    loading: false,
     list: []
 }
 
@@ -96,12 +97,12 @@ export const addChores = createAsyncThunk(
         try {
             const email = thunkAPI.getState().auth.email;
             const safeEmail = email.replace(/[.]/g,"_");
-            const res= await axios.post(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores.json`,data)            
+            const res= await axios.post(`${getUserPath(email)}/chores.json`,data)            
             console.log({...data,id:res.data.name});
             return {...data,id:res.data.name}
 
         } catch (err) {
-            thunkAPI.rejectWithValue("Failed to add Chores");
+            return thunkAPI.rejectWithValue("Failed to add Chores");
         }
     }
 )
@@ -110,14 +111,14 @@ export const fetchChores = createAsyncThunk(
     "chores/fetchChores",async(_,thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");
-            const res= await axios.get(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores.json`)            
+            const res= await axios.get(`${getUserPath(email)}/chores.json`)            
             const list = Object.keys(res.data).map(ele=>{
                 return {...res.data[ele],id:ele}
             })
+            console.log(list);
             return list;
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to fetch Chores");
+            return thunkAPI.rejectWithValue("Failed to fetch Chores");
         }
 
     }
@@ -128,11 +129,10 @@ export const changeStatus =createAsyncThunk(
         try{
             const date=new Date().toISOString().split("T")[0];
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");
-            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores/${id}.json`,{completed:date,reminded:true})            
+            await axios.patch(`${getUserPath(email)}/chores/${id}.json`,{completed:date,reminded:true})            
             return {id,date,reminded:true}
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to change the status");
+           return thunkAPI.rejectWithValue("Failed to change the status");
         }
     }
 )
@@ -140,11 +140,10 @@ export const deleteChores = createAsyncThunk(
     "chores/deleteChores",async(id,thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");
-            await axios.delete(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores/${id}.json`)            
+            await axios.delete(`${getUserPath(email)}/chores/${id}.json`)            
             return id;
         }catch(err){
-            thunkAPI.rejectWithValue("Failed to delete chores");
+            return thunkAPI.rejectWithValue("Failed to delete chores");
 
         }
     }
@@ -153,8 +152,7 @@ export const editChores = createAsyncThunk(
     "chores/editChores",async({data,id},thunkAPI)=>{
         try{
             const email = thunkAPI.getState().auth.email;
-            const safeEmail = email.replace(/[.]/g,"_");            
-            await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores/${id}.json`,data)            
+            await axios.patch(`${getUserPath(email)}/chores/${id}.json`,data)            
             return {data,id}
         }catch(err){
             thunkAPI.rejectWithValue("Failed to edit the chore");
@@ -165,8 +163,7 @@ export const markReminded = createAsyncThunk(
     "chores/markReminded",
     async (taskId,thunkAPI) => {
         const email = thunkAPI.getState().auth.email;
-        const safeEmail = email.replace(/[.]/g,"_");            
-        await axios.patch(`https://capstone-project-b88ca-default-rtdb.firebaseio.com/${safeEmail}/chores/${taskId}.json`,{
+        await axios.patch(`${getUserPath(email)}/chores/${taskId}.json`,{
           reminded: true
         }
       );
